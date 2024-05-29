@@ -14,10 +14,10 @@ class FCOnlineMatch:
         self.initialize_csv_file_in_s3()
 
     def initialize_csv_file_in_s3(self):
-        cols = [['matchId', 'matchResult', 'matchEndType', 'systemPause', 'foul', 'injury',
+        cols = [['matchId', 'seasonId', 'matchResult', 'matchEndType', 'systemPause', 'foul', 'injury',
                 'redCards', 'yellowCards', 'dribble', 'cornerKick', 'possession', 'offsideCount', 'averageRating', 'controller'],
                 ['matchId', 'shootTotal', 'effectiveShootTotal', 'shootOutScore', 'goalTotal', 'goalTotalDisplay','ownGoal','shootHeading',
-                'goalHeading', 'shootFreekick', 'goalFreekick', 'shootInPenalty', 'goalInPenalty', 'shootOutPenalty', 'shootPenaltyKick', 'goalPenaltykick'],
+                'goalHeading', 'shootFreekick', 'goalFreekick', 'shootInPenalty', 'goalInPenalty', 'shootOutPenalty', 'goalOutPenalty', 'shootPenaltyKick', 'goalPenaltykick'],
                 ['matchId', 'passTry', 'passSuccess', 'shortPassTry', 'shortPassSuccess', 'longPassTry', 'longPassSuccess','bouncingLobPassTry',
                 'bouncingLobPassSuccess', 'drivenGroundPassTry', 'drivenGroundPassSuccess', 'throughPassTry', 'throughPassSuccess', 'lobbedThroughPassTry', 'lobbedThroughPassSuccess'],
                 ['matchId', 'blockTry', 'blockSuccess', 'tackleTry', 'tackleSuccess']]

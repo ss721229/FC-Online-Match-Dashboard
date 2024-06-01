@@ -3,14 +3,15 @@ import pandas as pd
 import requests
 from botocore.exceptions import ClientError
 import json
+import os
 
 class FCOnlineMatch:
     def __init__(self):
-        self.s3 = boto3.client('s3', aws_access_key_id='#', aws_secret_access_key='#', region_name='#')
+        self.s3 = boto3.client('s3', aws_access_key_id=os.environ.get('S3_ACCESS_KEY'), aws_secret_access_key=os.environ.get('S3_SECRET_KEY'), region_name=os.environ.get('S3_LOCATION'))
         self.bucket_name = 'fc-online-match'
         self.file_key = ['match_detail.csv', 'shoot.csv', 'pass.csv', 'defence.csv']
-        self.headers = {"x-nxopen-api-key": "#"}
-        
+        self.headers = {"x-nxopen-api-key": os.environ.get('NEXEN_API_KEY')}
+
         self.initialize_csv_file_in_s3()
 
     def initialize_csv_file_in_s3(self):
@@ -42,7 +43,7 @@ class FCOnlineMatch:
         url = "https://open.api.nexon.com/fconline/v1/match?matchtype=50&offset=0&limit=100&orderby=desc"
         response = requests.get(url, headers = self.headers)
         return response.json()
-    
+
     def get_csv_files_in_s3(self):
         match_detail = pd.read_csv(self.s3.get_object(Bucket=self.bucket_name, Key='match_detail.csv')['Body'])
         shoot = pd.read_csv(self.s3.get_object(Bucket=self.bucket_name, Key='shoot.csv')['Body'])
@@ -68,7 +69,7 @@ class FCOnlineMatch:
                     defence = defence._append(match_info['defence'], ignore_index=True)
         match_detail['matchResult'] = match_detail['matchResult'].replace({'패': 'lose', '승': 'win', '무': 'draw'})
         return match_detail, shoot, pass_, defence
-    
+
     def save_csv_to_s3(self, match_detail, shoot, pass_, defence):
         try:
             # 파일 업로드
@@ -82,9 +83,40 @@ class FCOnlineMatch:
             self.s3.put_object(Bucket=self.bucket_name, Key='defence.csv', Body=csv_buffer)
         except ClientError as upload_error:
             print(f"An error occurred while uploading the file: {upload_error}")
-        
+
 if __name__=='__main__':
-    test = FCOnlineMatch()
-    match_detail, shoot, pass_, defence = test.get_csv_files_in_s3()
-    match_detail, shoot, pass_, defence = test.append_match_data_to_csv(match_detail, shoot, pass_, defence)
-    test.save_csv_to_s3(match_detail, shoot, pass_, defence)
+    print('Start scraping')
+
+    try:
+        print("Create csv files if they don't exist")
+        test = FCOnlineMatch()
+        print("Done")
+    except Exception as e:
+        print(f"An error occurred while creating csv files: {e}")
+        raise
+
+    try:
+        print("Get csv files from s3")
+        match_detail, shoot, pass_, defence = test.get_csv_files_in_s3()
+        print("Done")
+    except Exception as e:
+        print(f"An error occurred while getting csv files from S3: {e}")
+        raise
+
+    try:
+        print("Append data to csv from api")
+        match_detail, shoot, pass_, defence = test.append_match_data_to_csv(match_detail, shoot, pass_, defence)
+        print("Done")
+    except Exception as e:
+        print(f"An error occurred while appending data to csv: {e}")
+        raise
+
+    try:
+        print("Save csv files to s3")
+        test.save_csv_to_s3(match_detail, shoot, pass_, defence)
+        print("Done")
+    except Exception as e:
+        print(f"An error occurred while saving csv files to S3: {e}")
+        raise
+
+    print('Done scraping')

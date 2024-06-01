@@ -4,6 +4,7 @@ import requests
 from botocore.exceptions import ClientError
 import json
 import os
+from datetime import datetime
 
 class FCOnlineMatch:
     def __init__(self):
@@ -85,7 +86,7 @@ class FCOnlineMatch:
             print(f"An error occurred while uploading the file: {upload_error}")
 
 if __name__=='__main__':
-    print('Start scraping')
+    print(f'{datetime.now()}: Start scraping')
 
     try:
         print("Create csv files if they don't exist")

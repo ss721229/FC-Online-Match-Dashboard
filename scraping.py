@@ -59,15 +59,16 @@ class FCOnlineMatch:
             response = requests.get(url, headers=self.headers)
             if 'matchInfo' in json.loads(response.text):
                 for match_info in json.loads(response.text)['matchInfo']:
-                    match_info['matchDetail']['matchId'] = id
-                    match_info['shoot']['matchId'] = id
-                    match_info['pass']['matchId'] = id
-                    match_info['defence']['matchId'] = id
+                    if match_info['matchDetail']['matchEndType'] != 4:
+                        match_info['matchDetail']['matchId'] = id
+                        match_info['shoot']['matchId'] = id
+                        match_info['pass']['matchId'] = id
+                        match_info['defence']['matchId'] = id
 
-                    match_detail = match_detail._append(match_info['matchDetail'], ignore_index=True)
-                    shoot = shoot._append(match_info['shoot'], ignore_index=True)
-                    pass_ = pass_._append(match_info['pass'], ignore_index=True)
-                    defence = defence._append(match_info['defence'], ignore_index=True)
+                        match_detail = match_detail._append(match_info['matchDetail'], ignore_index=True)
+                        shoot = shoot._append(match_info['shoot'], ignore_index=True)
+                        pass_ = pass_._append(match_info['pass'], ignore_index=True)
+                        defence = defence._append(match_info['defence'], ignore_index=True)
         match_detail['matchResult'] = match_detail['matchResult'].replace({'패': 'lose', '승': 'win', '무': 'draw'})
         return match_detail, shoot, pass_, defence
 

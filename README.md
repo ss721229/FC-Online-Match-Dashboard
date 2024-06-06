@@ -38,7 +38,7 @@
 - <a href="https://sanseo.tistory.com/129">FC Online 공식 경기 분석 (7) - EC2 / crontab 자동화 2</a>
 - <a href="https://sanseo.tistory.com/133">FC Online 공식 경기 분석 (8) - Preset Dashboard, 자동화</a>
 - <a href="https://sanseo.tistory.com/139">FC Online 공식 경기 분석 (9) - 결과 분석</a>
-- <a href="https://sanseo.tistory.com/">FC Online 공식 경기 분석 - 회고
+- <a href="https://sanseo.tistory.com/142">FC Online 공식 경기 분석 - 회고
 
 ## &nbsp;&nbsp;&nbsp;Good
 - EC2 / Crontab을 활용해 자동화 서비스를 성공적으로 구현하였다.
